@@ -45,9 +45,9 @@ Core::Engine::Engine(std::string title,
 
     while(!glfwWindowShouldClose(this->window)) {
 
-        //this->_process();
+        this->_process();
 
-        //glfwSwapBuffers(window); // меняем буферы местами
+        glfwSwapBuffers(window); // меняем буферы местами
         glfwPollEvents(); 
     }
 }

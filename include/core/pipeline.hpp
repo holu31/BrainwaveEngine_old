@@ -15,7 +15,7 @@ namespace Core {
                     const std::string &fragFilepath);
             ~Pipeline() {}
 
-            Pipeline(const Pipeline&) = delete;
+            //Pipeline(const Pipeline&) = delete;
 
         private:
 
