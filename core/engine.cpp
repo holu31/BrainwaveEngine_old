@@ -41,6 +41,7 @@ Core::Engine::Engine(std::string title,
     glViewport(0, 0, width, height);
 
     glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback);
+
     //glfwSetKeyCallback(window, input);
 
     while(!glfwWindowShouldClose(this->window)) {
