@@ -1,18 +1,23 @@
-import org.joml.*
-import org.lwjgl.system.MemoryUtil.NULL
+
+import org.joml.Matrix4f
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL33.*
+import org.lwjgl.system.MemoryUtil.NULL
 
 class Mesh constructor(
 	var shader: Shader,
+	var texture: Texture? = null,
 	var positions: FloatArray,
 	var indices: IntArray,
 	var colors: FloatArray,
+	var uv: FloatArray
 ) {
 
 	companion object {
 
-		fun cube(shader: Shader) = Mesh(
+		fun cube(shader: Shader, texture: Texture? = null) = Mesh(
 			shader,
+			texture,
 			floatArrayOf(
 				1.0f, 1.0f, 1.0f,
 				1.0f, -1.0f, 1.0f,
@@ -94,6 +99,42 @@ class Mesh constructor(
 				0.8f, 0.8f, 0.8f, 1.0f,
 				0.8f, 0.8f, 0.8f, 1.0f,
 			),
+			floatArrayOf(
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+			)
 		)
 
 	}
@@ -103,6 +144,7 @@ class Mesh constructor(
 	val posBuffer: Int = glGenBuffers()
 	val indexBuffer: Int = glGenBuffers()
 	val colBuffer: Int = glGenBuffers()
+	val uvBuffer: Int = glGenBuffers()
 	
 	var pos: Vector3f = Vector3f()
 	var rot: Vector3f = Vector3f()
@@ -117,6 +159,14 @@ class Mesh constructor(
 		}
 	
 	init {
+		if (texture != null){
+			println("lmao xd im so... im so cringe")
+			shader.bind()
+			texture?.import()
+			shader.setUInt("textureSampler", 0)
+			shader.unbind()
+		}
+
 		updateBuffers()
 	}
 	
@@ -140,24 +190,27 @@ class Mesh constructor(
 		setArrayBuffer(0, 3, posBuffer, positions)
 		setElementArrayBuffer(indexBuffer, indices)
 		setArrayBuffer(1, 4, colBuffer, colors)
+		setArrayBuffer(2, 2, uvBuffer, uv)
 		
 		glBindVertexArray(GL_FALSE)
 	}
 	
 	fun draw() {
+		shader.bind()
 		glBindVertexArray(vao)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer)
-		shader.bind()
-		
+		texture?.bind()
+
 		shader.setUniform("projMat", Camera.current!!.projMat)
 		shader.setUniform("viewMat", Camera.current!!.viewMat)
 		shader.setUniform("transMat", transMat)
-		
+
 		glDrawElements(GL_TRIANGLES, indices.size, GL_UNSIGNED_INT, NULL)
-		
+
+		shader.unbind()
 		glBindVertexArray(GL_FALSE)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_FALSE)
-		shader.unbind()
+		texture?.unbind()
 	}
 
 }

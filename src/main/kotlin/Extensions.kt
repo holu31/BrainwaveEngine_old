@@ -1,6 +1,12 @@
-import java.nio.*
-import org.joml.*
+
+import org.joml.Math
+import org.joml.Vector2f
+import org.joml.Vector3f
 import org.lwjgl.BufferUtils
+import java.nio.ByteBuffer
+import java.nio.DoubleBuffer
+import java.nio.FloatBuffer
+import java.nio.IntBuffer
 
 // Float
 
@@ -24,4 +30,7 @@ operator fun Vector2f.times(o: Vector2f): Vector2f = Vector2f(x * o.x, y * o.y)
 
 // Buffers
 
-fun floatBuffer(capacity: Int): FloatBuffer = BufferUtils.createFloatBuffer(capacity)
+fun doubleBuffer(capacity: Int = 1): DoubleBuffer = BufferUtils.createDoubleBuffer(capacity)
+fun floatBuffer(capacity: Int = 1): FloatBuffer = BufferUtils.createFloatBuffer(capacity)
+fun intBuffer(capacity: Int = 1): IntBuffer = BufferUtils.createIntBuffer(capacity)
+fun byteBuffer(capacity: Int = 1): ByteBuffer =  BufferUtils.createByteBuffer(capacity)

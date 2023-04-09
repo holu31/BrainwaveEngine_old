@@ -1,9 +1,7 @@
+
 import org.joml.Vector2f
 import org.joml.Vector3f
-import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
-import java.nio.DoubleBuffer
-import java.nio.FloatBuffer
 
 class Input constructor(
     val window: Long
@@ -19,8 +17,8 @@ class Input constructor(
 
     val mousePosition
         get(): Vector2f {
-            var xpos = BufferUtils.createDoubleBuffer(1)
-            var ypos = BufferUtils.createDoubleBuffer(1)
+            var xpos = doubleBuffer(1)
+            var ypos = doubleBuffer(1)
             glfwGetCursorPos(window, xpos, ypos)
             xpos.rewind()
             ypos.rewind()

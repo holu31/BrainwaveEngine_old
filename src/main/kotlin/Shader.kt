@@ -1,4 +1,4 @@
-import org.joml.*
+import org.joml.Matrix4f
 import org.lwjgl.opengl.GL33.*
 
 class Shader constructor(
@@ -41,9 +41,12 @@ class Shader constructor(
 		
 		return pos
 	}
+
+	fun getULoc(uname: String): Int = glGetUniformLocation(program, uname)
+
+	fun setUInt(uname: String, value: Int): Unit = glUniform1i(getULoc(uname), value)
 	
 	// тут если что мы передаём в шейдер массив переменных из матрицы, который сохраняем в массив флоатов
 	fun setUniform(uniform: String, value: Matrix4f): Unit =
 		glUniformMatrix4fv(getUniformLocation(uniform), false, value.get(floatBuffer(16)))
-	
 }
