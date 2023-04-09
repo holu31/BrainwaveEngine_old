@@ -159,5 +159,5 @@ class Mesh constructor(
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_FALSE)
 		shader.unbind()
 	}
-	
+
 }

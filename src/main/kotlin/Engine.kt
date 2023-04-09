@@ -11,6 +11,7 @@ abstract class Engine constructor(
 ) {
 	
 	val window: Long
+	lateinit var input: Input
 
 	private var prevDeltaTime: Float = GLFW.glfwGetTime().toFloat()
 	
@@ -46,7 +47,8 @@ abstract class Engine constructor(
 		GL33.glEnable(GL33.GL_DEPTH_TEST)
 		
 		GL33.glClearColor(0.4f, 0.4f, 0.4f, 1.0f)
-		
+
+		input = Input(window)
 		run(::start)
 		while (!GLFW.glfwWindowShouldClose(window))
 			logic()

@@ -16,7 +16,6 @@ class Test : Engine(960, 540, "Test") {
     lateinit var mesh: Mesh
     val speed: Float
         get() = 2.0f
-    var lastMousePos = Vector2f(0.0f, 0.0f)
 
     override fun start() {
         camera = Camera()
@@ -27,10 +26,8 @@ class Test : Engine(960, 540, "Test") {
             Asset("assets/mesh.frag").text,
         )
         mesh = Mesh.cube(shader)
-        //mesh.scale = Vector3f(1f, 0.1f, 1f)
-        Input.cursorHide(window)
-        lastMousePos = Input.mousePosition(window)
-        camera.rot.x -= 2.0f
+
+        input.cursorLock()
     }
 
     override fun update(deltaTime: Float) {
@@ -38,31 +35,24 @@ class Test : Engine(960, 540, "Test") {
 
         //mesh.rot.y -= 150.0f * deltaTime
 
-        camera.pos.z -= if (Input.pressed(window, Input.KEY_W)) speed * deltaTime else 0.0f
-        camera.pos.z += if (Input.pressed(window, Input.KEY_S)) speed * deltaTime else 0.0f
+        var direction = input.getAxis(
+            input.KEY_W,
+            input.KEY_S,
+            input.KEY_A,
+            input.KEY_D
+        )
 
-        camera.pos.x -= if (Input.pressed(window, Input.KEY_A)) speed * deltaTime else 0.0f
-        camera.pos.x += if (Input.pressed(window, Input.KEY_D)) speed * deltaTime else 0.0f
+        camera.pos += direction.rotateY(camera.rot.y.toRad()) * speed * deltaTime
 
-        camera.pos.y += if (Input.pressed(window, Input.KEY_SPACE)) speed * deltaTime else 0.0f
-        camera.pos.y -= if (Input.pressed(window, Input.KEY_LSHIFT)) speed * deltaTime else 0.0f
+        val motion = input.mouseMotion
 
-        if (Input.mousePosition(window) != lastMousePos) {
-            if(Input.mousePosition(window).x < lastMousePos.x) {
-                camera.rot.y += Input.mousePosition(window).x / 2 * deltaTime
-                //camera.rot.x += Input.mousePosition(window).y / 2 * deltaTime
-            }
-            else {
-                camera.rot.y -= Input.mousePosition(window).x / 2 * deltaTime
-                //camera.rot.x -= Input.mousePosition(window).y / 2 * deltaTime
-            }
-            lastMousePos = Input.mousePosition(window)
-        }
+        camera.rot.y -= motion.x * .1f
+        camera.rot.x -= motion.y * .1f
 
     }
 
     override fun input(key: Int) {
-        if (key == Input.KEY_SPACE) {
+        if (key == input.KEY_SPACE) {
             println("sus")
         }
     }
