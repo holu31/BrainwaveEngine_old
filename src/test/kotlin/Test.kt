@@ -1,14 +1,19 @@
 
 import com.bulletphysics.linearmath.Transform
-import core.Config
-import core.Engine
+import com.holu31.brainwave.core.Config
+import com.holu31.brainwave.core.Engine
+import com.holu31.brainwave.physics.PhysicsObject
+import com.holu31.brainwave.render.*
+import com.holu31.brainwave.times
+import com.holu31.brainwave.toJavaX
+import com.holu31.brainwave.toRad
 import org.joml.Math.clamp
 import org.joml.Vector3f
-import physics.PhysicsObject
-import render.*
+import kotlin.system.exitProcess
 
 class Test : Engine(960, 540, "Test", config = Config(
-    resizable = false
+    resizable = false,
+    msaa = 2
 )
 ) {
 
@@ -25,6 +30,7 @@ class Test : Engine(960, 540, "Test", config = Config(
     lateinit var skybox: Mesh
 
     lateinit var mesh: Mesh
+    lateinit var mesh2: Mesh
 
     lateinit var player: PhysicsObject
 
@@ -56,7 +62,7 @@ class Test : Engine(960, 540, "Test", config = Config(
         mesh.scale = Vector3f(10.0f, 0.1f, 10.0f)
 
         player = PhysicsObject.cube(
-            Vector3f(1.0f, 1.0f, 1.0f).toJavaX(),
+            Vector3f(1f, 1.0f, 1f).toJavaX(),
             1.0f
         )
         player.rb.translate(Vector3f(
@@ -69,17 +75,12 @@ class Test : Engine(960, 540, "Test", config = Config(
         skybox.draw()
         mesh.draw()
 
-        val dir2 = input.getAxis(
-            input.KEY_UP,
-            input.KEY_DOWN,
-            input.KEY_LEFT,
-            input.KEY_RIGHT
+        val dir = input.getAxis(
+            input.KEY_W,
+            input.KEY_S,
+            input.KEY_A,
+            input.KEY_D
         )
-
-        /*dir2.y += if (input.pressed(input.KEY_SPACE)) 1.0f else 0.0f
-        dir2.y -= if (input.pressed(input.KEY_LSHIFT)) 1.0f else 0.0f
-
-        camera.pos += dir2.rotateY(camera.rot.y.toRad()) * speed * deltaTime*/
 
         var transform = Transform()
 
@@ -88,7 +89,7 @@ class Test : Engine(960, 540, "Test", config = Config(
 
         skybox.pos = camera.pos
 
-        player.rb.translate(dir2.rotateY(camera.rot.y.toRad()).toJavaX() * speed * deltaTime)
+        player.rb.translate(dir.rotateY(camera.rot.y.toRad()).toJavaX() * speed * deltaTime)
 
         val motion = input.mouseMotion
 
@@ -99,8 +100,12 @@ class Test : Engine(960, 540, "Test", config = Config(
     }
 
     override fun input(key: Int) {
-        if (key == input.KEY_SPACE) {
-            println("sus")
+        if (key == input.KEY_ESCAPE) {
+            exitProcess(0)
+        }
+        if(key == input.KEY_SPACE){
+            if(player.isGround())
+                player.rb.applyCentralImpulse(Vector3f(0f, 5f, 0f).toJavaX())
         }
     }
 
